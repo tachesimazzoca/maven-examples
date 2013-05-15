@@ -1,0 +1,46 @@
+#!/usr/bin/env sh
+
+installdir=$1
+if test -z ${installdir}; then
+    installdir="${HOME}/.mvn"
+fi
+
+installdir=`readlink -f ${installdir}`
+
+if test -d "$installdir"; then
+    echo "${installdir} already exists." >&2
+    exit 1
+fi
+
+mvnsdir="${installdir}/mavens"
+install -d "${mvnsdir}"
+if ! test -d "$mvnsdir"; then
+    echo "${mvnsdir} does not exists." >&2
+    exit 1
+fi
+
+cd "${mvnsdir}"
+
+# mavens/apache-maven-2.2.1 
+echo "Downloading apache-maven-2.2.1-bin.tar.gz"
+curl -LO "http://www.us.apache.org/dist/maven/maven-2/2.2.1/binaries/apache-maven-2.2.1-bin.tar.gz"
+tar xvfz apache-maven-2.2.1-bin.tar.gz
+cd "${installdir}"
+ln -s mavens/apache-maven-2.2.1/ maven
+
+mvndir="${installdir}/maven/bin"
+
+# etc/bashrc 
+mkdir etc
+echo "PATH=${mvndir}:\$PATH
+
+export PATH" > etc/bashrc 
+
+# Complete messages 
+echo ""
+echo "apache-maven-2.2.1 has been installed at ${mvndir}."
+echo "Don't forget to add to your environment variable PATH."
+echo ""
+echo "    % echo 'export PATH=${mvndir}:\$PATH' > ~/.bash_profile"
+echo "    % . ~/.bash_profile"
+echo ""
