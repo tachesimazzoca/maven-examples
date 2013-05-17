@@ -22,6 +22,49 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <profiles>
+    <profile>
+      <id>development</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <app.resources>src/development/resources</app.resources>
+        <app.webResources>src/development/webapp</app.webResources>
+      </properties>
+    </profile>
+    <profile>
+      <id>production</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <!--<maven.test.skip>true</maven.test.skip>-->
+        <app.resources>src/main/resources</app.resources>
+        <app.webResources>src/main/webapp</app.webResources>
+      </properties>
+    </profile>
+  </profiles>
+  <build>
+    <resources>
+      <resource>
+        <directory>${app.resources}</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <webResources>
+            <resource>
+              <directory>${app.webResources}</directory>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
   <reporting>
     <plugins>
       <plugin>
